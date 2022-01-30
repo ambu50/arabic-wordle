@@ -267,7 +267,7 @@ function todayMode() {
           network="twitter"
           :url="myurl"
           :title="twitter_str+grid"
-          hashtags="wordle,arabic"
+          hashtags="wordle,arabic,arabic_wordle"
         >
         <br>
         شارك نتيجتك عبر تويتر <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitter' }" />
