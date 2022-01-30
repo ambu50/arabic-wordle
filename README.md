@@ -1,6 +1,6 @@
 # Vue Wordle
 
-Arabic Implementation of Vue Wordle.
+Arabic Implementation of Vue Wordle with additional features such as pick your word to share with friends and random words.
 
 [Live demo](https://vue-wordle.netlify.app/)
 
