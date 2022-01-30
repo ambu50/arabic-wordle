@@ -13,12 +13,13 @@ import { ref } from "vue";
 //const window = app?.appContext.config.globalProperties['window'];
 
 let yourword = ref(false);
-const today = "كلمة اليوم";
-const choose = "اختر كلمتك";
-const random = "كلمة عشوائية";
+const mode_title = {
+  "today": "كلمة اليوم",
+  "choose": "اختر كلمتك",
+  "random": "كلمة عشوائية"
+}
 const myurl = window.location.href;
-const twitter_str = "قمت بتخمين كلمة اليوم بنجاح في لعبة wordle العربية";
-let mode = ref(today);
+let mode = ref(mode_title.today);
 let answer = getWord();
 let help = ref(false);
 if(!window.localStorage["first_run"]){
@@ -69,7 +70,7 @@ function getWord() {
       console.log("word");
       if (!Number.isNaN(Number(param.split("word=")[1]))) {
         console.log("get word number " + param.split("word=")[1]);
-        mode.value = random;
+        mode.value = mode_title.random;
         return getWordOfTheDay(Number(param.split("word=")[1]));
       } else {
         window.location.href = window.location.pathname;
@@ -81,7 +82,7 @@ function getWord() {
           //reload to base
           window.location.href = window.location.pathname;
         } else {
-          mode.value = choose;
+          mode.value = mode_title.choose;
           return query;
         }
       } catch (e) {
@@ -92,7 +93,9 @@ function getWord() {
     return getWordOfTheDay(-1);
   }
 }
-
+function modeTitle(){
+  return "قمت بتخمين " + mode.value +" بنجاح في لعبة wordle العربية";
+}
 function onKey(key: string) {
   if (!allowInput.value) return;
   if (/^[\u0621-\u064A]$/.test(key)) {
@@ -244,14 +247,17 @@ function b64DecodeUnicode(str: string) {
   );
 }
 function randomMode() {
-  mode.value = random;
+  mode.value = mode_title.random;
   const number = Math.round(Math.random() * 100000000) % 12000;
   let URL = window.location.pathname + "?word=" + number;
   window.location.href = URL;
 }
 function todayMode() {
-  mode.value = today;
+  mode.value = mode_title.today;
   window.location.href = window.location.pathname;
+}
+function shareAny(){
+  navigator.clipboard.writeText(modeTitle() +grid + "\n" + myurl);
 }
 </script>
 
@@ -266,13 +272,26 @@ function todayMode() {
         <ShareNetwork
           network="twitter"
           :url="myurl"
-          :title="twitter_str+grid"
+          :title="modeTitle()+grid"
           hashtags="wordle,arabic,arabic_wordle"
         >
         <br>
         شارك نتيجتك عبر تويتر <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitter' }" />
         
         </ShareNetwork>
+        <ShareNetwork
+          network="whatsapp"
+          :url="myurl"
+          :title="modeTitle()+grid"
+        >
+        <br>
+        <br>
+        شارك نتيجتك عبر واتساب <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'whatsapp' }" />
+        
+        </ShareNetwork>
+        <br>
+        <br>
+          <va-button v-on:click="shareAny"> أو انسخ النتيجة لمشاركتها في أي تطبيق </va-button>
       </div>
     </div>
   </Transition>
@@ -288,27 +307,26 @@ function todayMode() {
             <va-list-item v-on:click="todayMode">
               <va-list-item-section>
                 <va-list-item-label>
-                  {{ today }}
+                  {{ mode_title.today }}
                 </va-list-item-label>
               </va-list-item-section>
             </va-list-item>
             <va-list-item
               v-on:click="
-                mode = choose;
+                mode = mode_title.choose;
                 yourword = true;
                 allowInput = false;
-              "
-            >
+              ">
               <va-list-item-section>
                 <va-list-item-label>
-                  {{ choose }}
+                  {{ mode_title.choose }}
                 </va-list-item-label>
               </va-list-item-section>
             </va-list-item>
             <va-list-item v-on:click="randomMode">
               <va-list-item-section>
                 <va-list-item-label>
-                  {{ random }}
+                  {{ mode_title.random }}
                 </va-list-item-label>
               </va-list-item-section>
             </va-list-item>
@@ -341,8 +359,7 @@ function todayMode() {
           :style="{
             transitionDelay: `${index * 300}ms`,
             animationDelay: `${index * 100}ms`,
-          }"
-        >
+          }">
           {{ tile.letter }}
         </div>
       </div>
@@ -358,18 +375,24 @@ function todayMode() {
   direction: rtl;
   text-align: right;
 }
+.share-network-whatsapp{
+  color: white;
+  direction: rtl;
+  text-align: right;
+}
 i {
   color: black !important;
 }
-.va-button__content {
-  color: black !important;
-}
+
 .va-button--small .va-button__content {
   padding: 0px !important;
 }
 </style>
 
 <style scoped>
+.va-button__content {
+  color: black !important;
+}
 .va-list-item-label:hover {
   background-color: lightgray;
 }

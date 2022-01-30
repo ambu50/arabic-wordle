@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
     const emit = defineEmits(['yourword'])
     let word = ref("");
-    let url = ref(window.location.href);
+    let url = ref("");
     function close(){
         emit('yourword');
         console.log('emmiting');
@@ -18,7 +18,11 @@ import { ref } from 'vue'
         }
      }
 
-  function b64EncodeUnicode(str: string) {
+    function copyToClipboard(){
+        navigator.clipboard.writeText(url.value);
+    }
+
+    function b64EncodeUnicode(str: string) {
         // first we use encodeURIComponent to get percent-encoded UTF-8,
         // then we convert the percent encodings into raw bytes which
         // can be fed into btoa.
@@ -28,7 +32,7 @@ import { ref } from 'vue'
         }));
     }
     function createYourWord(str: string){
-        let URL = window.location.href + "?" + b64EncodeUnicode(str);
+        let URL = location.protocol + '//' + location.host + location.pathname + "?" + b64EncodeUnicode(str);
         url.value = URL;
     }
     function typeing(){
@@ -65,18 +69,29 @@ import { ref } from 'vue'
           </div>
 
           <div class="modal-body">
-            <div style="width: 300px;">
-                <va-input
-                class="mb-4"
-                @keyup="typeing"
-                v-model="word"
-                placeholder="أكتب كلمة مكونة من خمسة أحرف"
-                />
-                <va-input style="width: 600px;direction: ltr"
-                class="mb-4"
-                v-model="url" 
-                placeholder="سيظهر الرابط هنا"
-                />
+            <div class="row">
+                <div class="flex md12">
+                    <div class="item">
+                        <va-input
+                        class="mb-4"
+                        @keyup="typeing"
+                        v-model="word"
+                        placeholder="أكتب كلمة مكونة من خمسة أحرف"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div v-if="word.length == 5" class="row">
+                <div class="flex md9">
+                    <va-input style="width: 600px;direction: ltr"
+                    class="mb-4"
+                    v-model="url" 
+                    placeholder="سيظهر الرابط هنا"
+                    />
+                </div>
+                <div class="flex md3">
+                    <va-button v-on:click="copyToClipboard"> نسخ </va-button>
+                </div>
             </div>
           </div>
 
@@ -92,6 +107,9 @@ import { ref } from 'vue'
 </template>
 
 <style scoped>
+.va-button__content {
+  color: white !important;
+}
 .message {
   position: absolute;
   left: 50%;

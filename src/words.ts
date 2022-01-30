@@ -1,7 +1,5 @@
 const defaultMessage = ' Using word of the day instead.'
 
-
-
 export function getWordOfTheDay(wo: number) {
   let day = 0;
   if(wo < 0){
