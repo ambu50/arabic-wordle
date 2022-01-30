@@ -16,7 +16,7 @@ const today = "كلمة اليوم";
 const choose = "اختر كلمتك";
 const random = "كلمة عشوائية";
 const myurl = window.location.href;
-const twitter_str = "قمت بتخمين كلمة اليوم بنجاح في لعبة wordle العربية - ";
+const twitter_str = "قمت بتخمين كلمة اليوم بنجاح في لعبة wordle العربية";
 let mode = ref(today);
 let answer = getWord();
 let help = ref(false);
@@ -164,7 +164,7 @@ function completeRow() {
     if (currentRow.reverse().every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
       setTimeout(() => {
-        grid = genResultGrid();
+        grid = "\n" + genResultGrid() + "\n";
         showMessage(
           ["عبقري", "مذهل", "رائع", "أحسنت", "عظيم", "أخيرًا"][currentRowIndex],
           -1
@@ -254,19 +254,21 @@ function todayMode() {
   <Transition>
     <div class="message" v-if="message">
       <p>{{ message }}</p>
-      <br />
-      <pre v-if="grid">{{ grid }}</pre>
+      <div v-if="grid">
+        <br />
+        <pre>{{ grid }}</pre>
 
-      <ShareNetwork
-        network="twitter"
-        :url="myurl"
-        :title="twitter_str+grid"
-        hashtags="wordle,arabic"
-      >
-      <br>
-      شارك نتيجتك عبر تويتر <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitter' }" />
-       
-      </ShareNetwork>
+        <ShareNetwork
+          network="twitter"
+          :url="myurl"
+          :title="twitter_str+grid"
+          hashtags="wordle,arabic"
+        >
+        <br>
+        شارك نتيجتك عبر تويتر <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitter' }" />
+        
+        </ShareNetwork>
+      </div>
     </div>
   </Transition>
   <header>

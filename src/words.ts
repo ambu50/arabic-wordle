@@ -16,7 +16,7 @@ export function getWordOfTheDay(wo: number) {
     day = wo % 12000
   }
 
-  //console.log(answers[day])
+  console.log(answers[day])
   return answers[day]
 }
 
