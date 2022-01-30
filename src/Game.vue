@@ -11,6 +11,7 @@ import { ref } from "vue";
 
 //const app = getCurrentInstance()
 //const window = app?.appContext.config.globalProperties['window'];
+
 let yourword = ref(false);
 const today = "كلمة اليوم";
 const choose = "اختر كلمتك";
@@ -20,6 +21,10 @@ const twitter_str = "قمت بتخمين كلمة اليوم بنجاح في ل�
 let mode = ref(today);
 let answer = getWord();
 let help = ref(false);
+if(!window.localStorage["first_run"]){
+  help.value = true;
+  window.localStorage["first_run"] = false;
+}
 const white = "#FFFFFF";
 const black = "#000000";
 // Board state. Each tile is represented as { letter, state }
